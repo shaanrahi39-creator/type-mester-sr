@@ -1,0 +1,1007 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO & Meta Tags for Google Search -->
+    <title>Type Master SR - Free Typing Test, Typing Master Pro, SSC CGL Typing</title>
+    <meta name="description" content="Improve your typing speed with Type Master SR. Free advanced typing tutor, English & Hindi (Mangal Inscript) typing test, SSC CGL exam mode, and 20+ lessons.">
+    <meta name="keywords" content="typing test, typing master, typing speed test, typing tutor, english typing test, hindi typing test, mangal inscript, ssc cgl typing test">
+    <meta name="author" content="SHAAN">
+    <meta name="robots" content="index, follow">
+
+    <!-- ========================================================================= -->
+    <!-- 👉 GOOGLE SEARCH CONSOLE VERIFICATION CODE 👈 -->
+    <!-- REPLACE 'ADD_YOUR_VERIFICATION_CODE_HERE' WITH YOUR ACTUAL CODE -->
+    <!-- ========================================================================= -->
+    <meta name="google-site-verification" content="ADD_YOUR_VERIFICATION_CODE_HERE" />
+
+    <!-- ========================================================================= -->
+    <!-- 👉 GOOGLE ANALYTICS TRACKING CODE 👈 -->
+    <!-- REPLACE 'G-XXXXXXXXXX' WITH YOUR ACTUAL MEASUREMENT ID -->
+    <!-- ========================================================================= -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <!-- ======================= END OF GOOGLE CODES ============================= -->
+
+    <!-- Fonts and Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        hindi: ['Noto Sans Devanagari', 'sans-serif'],
+                    },
+                    colors: {
+                        bgDark: '#11111b',
+                        bgPanel: '#181825',
+                        primary: '#89b4fa',     
+                        textDim: '#585b70',     
+                        textBright: '#cdd6f4',  
+                        errorText: '#f38ba8',   
+                        successText: '#a6e3a1'  
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #11111b;
+            color: #cdd6f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; 
+            margin: 0;
+            padding: 0;
+        }
+
+        .scroll-x-auto {
+            overflow-x: auto;
+            white-space: nowrap;
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+        }
+        .scroll-x-auto::-webkit-scrollbar { display: none; }
+
+        /* 🔥 STRICT 3-LINE TYPING CONTAINER (Monkeytype Style) 🔥 */
+        .typing-container-wrapper {
+            width: 100%;
+            height: 160px;
+            min-height: 160px; 
+            flex-shrink: 0;    
+            overflow: hidden; 
+            position: relative;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+        }
+
+        .typing-container {
+            font-size: 1.85rem; 
+            line-height: 52px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .word {
+            display: inline-flex;
+            margin-right: 0.6em;
+            border-bottom: 2px solid transparent;
+        }
+        .word.error-word { border-bottom: 2px solid #f38ba8; }
+
+        .char {
+            color: #585b70; 
+            transition: color 0.1s ease;
+            position: relative; 
+        }
+        .char.correct { color: #cdd6f4; }
+        .char.incorrect { color: #f38ba8; background-color: rgba(243, 139, 168, 0.15); border-radius: 4px; }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .char.active-caret::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: 15%;
+            bottom: 15%;
+            width: 3px;
+            background-color: #89b4fa;
+            animation: blink 1s infinite;
+            border-radius: 2px;
+            z-index: 10;
+        }
+        .char.space.active-caret::before { left: 0; width: 3px; }
+
+        /* Virtual Keyboard */
+        .keyboard-wrapper {
+            flex-shrink: 0; 
+            background: #181825;
+            transition: all 0.3s ease;
+            padding: 0;
+            border-top: 0px solid #313244;
+            height: 0;
+            overflow: hidden;
+        }
+        .keyboard-wrapper.show-kb {
+            padding: 1rem;
+            border-top-width: 1px;
+            height: auto;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .keyboard-row { display: flex; justify-content: center; gap: 6px; }
+
+        .key {
+            background: #1e1e2e;
+            border: 1px solid #313244;
+            border-bottom: 3px solid #11111b;
+            border-radius: 6px;
+            padding: 10px 8px;
+            min-width: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #cdd6f4;
+            transition: all 0.05s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .key.active { background: #89b4fa; border-color: #89b4fa; color: #11111b; transform: translateY(2px); border-bottom-width: 1px; }
+        .key.error { background: #f38ba8; border-color: #f38ba8; color: #11111b; }
+        .key-wide { min-width: 65px; font-size: 0.8rem;}
+        .key-wider { min-width: 85px; font-size: 0.8rem;}
+        .key-space { width: 300px; }
+
+        @media (max-width: 768px) {
+            .typing-container-wrapper { height: 120px; }
+            .typing-container { font-size: 1.4rem; line-height: 40px; }
+            .key { min-width: 25px; padding: 8px 4px; font-size: 0.75rem; }
+            .key-space { width: 150px; }
+        }
+
+        .blur-overlay { backdrop-filter: blur(8px); transition: opacity 0.3s ease; z-index: 40; }
+        .is-focused .blur-overlay { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+
+<body class="font-sans selection:bg-primary selection:text-bgDark">
+
+    <!-- Header Section -->
+    <header class="bg-bgPanel border-b border-[#313244] px-4 py-3 flex flex-col gap-3 shrink-0 z-20 shadow-md">
+        <div class="flex flex-wrap items-center justify-between max-w-7xl mx-auto w-full gap-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-primary flex items-center gap-2">
+                <i class="fa-solid fa-keyboard"></i> Type Master SR
+            </h1>
+            
+            <div class="flex gap-3 md:gap-5 text-center bg-bgDark px-4 py-2 rounded-xl border border-[#313244] shadow-inner scroll-x-auto">
+                <div>
+                    <div class="text-[10px] text-textDim uppercase font-bold">Time</div>
+                    <div class="text-xl md:text-2xl font-mono font-bold text-primary" id="stat-time">00:00</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-textDim uppercase font-bold">Net Speed</div>
+                    <div class="text-xl md:text-2xl font-mono font-bold text-successText" id="stat-wpm">0</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-textDim uppercase font-bold">Gross Speed</div>
+                    <div class="text-xl md:text-2xl font-mono font-bold text-textBright" id="stat-gross-wpm">0</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-textDim uppercase font-bold">Accuracy</div>
+                    <div class="text-xl md:text-2xl font-mono font-bold text-textBright" id="stat-acc">100%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation & Modes -->
+        <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex gap-2 bg-bgDark p-1 rounded-lg border border-[#313244] w-full md:w-auto scroll-x-auto shadow-sm">
+                <button onclick="setMode('lessons')" id="mode-lessons" class="px-4 py-2 rounded-md font-semibold text-sm transition-all text-textDim hover:text-textBright"><i class="fa-solid fa-graduation-cap"></i> Lessons</button>
+                <button onclick="setMode('time')" id="mode-time" class="px-4 py-2 rounded-md font-semibold text-sm transition-all text-textDim hover:text-textBright"><i class="fa-solid fa-clock"></i> Time Test</button>
+                <button onclick="setMode('words')" id="mode-words" class="px-4 py-2 rounded-md font-semibold text-sm transition-all text-textDim hover:text-textBright"><i class="fa-solid fa-font"></i> Word Test</button>
+                <button onclick="setMode('exam')" id="mode-exam" class="px-4 py-2 rounded-md font-semibold text-sm transition-all text-[#f38ba8] hover:bg-[#f38ba820]"><i class="fa-solid fa-file-contract"></i> SSC CGL Mode</button>
+            </div>
+            
+            <div class="flex gap-2 w-full md:w-auto justify-between md:justify-end scroll-x-auto">
+                <div class="flex items-center gap-2 bg-bgPanel px-2 py-1 rounded-lg border border-[#313244]" id="universal-timer-container">
+                    <span class="text-textDim text-xs px-2 hidden md:block font-bold"><i class="fa-solid fa-stopwatch"></i> Timer:</span>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(30)">30s</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(60)">1 Min</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(120)">2 Min</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(300)">5 Min</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(600)">10 Min</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(900)">15 Min</button>
+                    <button class="time-btn px-2 py-1 rounded-md text-xs font-bold transition-all text-textDim hover:text-textBright" onclick="setUniversalTime(1800)">30 Min</button>
+                </div>
+
+                <button onclick="toggleLanguage()" id="lang-btn" class="text-primary hover:text-white transition-colors flex items-center gap-2 text-sm font-semibold bg-bgDark px-3 py-2 rounded-lg border border-primary/40">
+                    <i class="fa-solid fa-language"></i> Eng / हिंदी
+                </button>
+                <button onclick="toggleKeyboard()" id="kb-btn" class="text-textDim hover:text-textBright transition-colors flex items-center gap-2 text-sm font-semibold bg-bgDark px-3 py-2 rounded-lg border border-[#313244] hover:bg-[#313244]">
+                    <i class="fa-solid fa-keyboard"></i> Keyboard
+                </button>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full flex items-center gap-2 scroll-x-auto" id="sub-options-container"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative w-full mx-auto bg-bgDark px-4 md:px-6 py-4" id="main-area">
+        
+        <!-- Results Overlay -->
+        <div id="result-overlay" class="absolute inset-0 bg-bgDark/95 backdrop-blur-xl flex flex-col items-center justify-center z-50 hidden">
+            <div class="flex flex-col items-center w-full px-4 transform scale-95 transition-transform duration-300" id="result-box">
+                <h2 class="text-3xl md:text-5xl font-bold mb-2 text-primary tracking-tight">Test Completed!</h2>
+                <p class="text-textDim mb-8 text-sm md:text-lg">Here is your detailed performance report.</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-4xl">
+                    <div class="text-center bg-bgPanel p-6 rounded-2xl border-2 border-primary/50 relative shadow-lg shadow-primary/10">
+                        <div class="text-xs md:text-sm text-textDim uppercase font-bold mb-1">Net Speed</div>
+                        <div class="text-4xl md:text-6xl font-bold text-primary font-mono" id="result-wpm">0 <span class="text-sm md:text-xl text-textDim">WPM</span></div>
+                    </div>
+                    <div class="text-center bg-bgPanel p-6 rounded-2xl border border-[#313244]">
+                        <div class="text-xs md:text-sm text-textDim uppercase font-bold mb-1">Gross Speed</div>
+                        <div class="text-3xl md:text-5xl font-bold text-textBright font-mono" id="result-gross">0 <span class="text-sm md:text-xl text-textDim">WPM</span></div>
+                    </div>
+                    <div class="text-center bg-bgPanel p-6 rounded-2xl border border-[#313244]">
+                        <div class="text-xs md:text-sm text-textDim uppercase font-bold mb-1">Accuracy</div>
+                        <div class="text-4xl md:text-6xl font-bold text-textBright font-mono" id="result-acc">0%</div>
+                    </div>
+                    <div class="text-center bg-bgPanel p-6 rounded-2xl border border-[#313244]">
+                        <div class="text-xs md:text-sm text-textDim uppercase font-bold mb-1">Keystrokes</div>
+                        <div class="text-2xl md:text-3xl font-bold font-mono mt-2">
+                            <span class="text-successText" id="result-correct-keys">0</span> / 
+                            <span class="text-errorText" id="result-error-keys">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button onclick="restartCurrent()" class="px-6 py-3 bg-bgPanel hover:bg-[#313244] rounded-xl font-bold text-textBright border border-[#45475a] transition-all">
+                        <i class="fa-solid fa-rotate-right"></i> Restart Test
+                    </button>
+                    <button onclick="loadNextOption()" id="btn-next" class="px-6 py-3 bg-primary text-bgDark hover:bg-[#b4befe] rounded-xl font-bold hidden transition-all shadow-lg shadow-primary/20">
+                        Next Lesson <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Container -->
+        <div id="typing-wrapper" class="w-full max-w-7xl mx-auto relative flex-1 flex flex-col is-focused bg-bgDark rounded-2xl border-2 border-[#313244] min-h-[220px] overflow-hidden shadow-lg transition-colors">
+            
+            <div class="absolute inset-0 z-20 flex items-center justify-center cursor-pointer blur-overlay bg-bgDark/80" onclick="focusApp()">
+                <div class="bg-bgPanel border border-primary/50 px-6 py-3 rounded-xl text-primary font-bold shadow-xl flex items-center gap-3 animate-pulse text-sm md:text-lg">
+                    <i class="fa-solid fa-mouse-pointer"></i> Click here or press any key to focus
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center px-4 md:px-8 w-full h-full">
+                <div class="typing-container-wrapper" id="text-wrapper-box">
+                    <div id="text-display" class="typing-container font-mono text-left select-none outline-none"></div>
+                </div>
+            </div>
+            
+            <div class="w-full bg-[#181825] h-1.5 absolute bottom-0 left-0">
+                <div id="progress-bar" class="bg-primary h-full transition-all duration-200" style="width: 0%"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Virtual Keyboard -->
+    <div class="keyboard-wrapper" id="kb-wrapper">
+        <div class="keyboard select-none" id="virtual-keyboard">
+            <div class="keyboard-row">
+                <div class="key" data-key="`">`</div>
+                <div class="key" data-key="1">1</div>
+                <div class="key" data-key="2">2</div>
+                <div class="key" data-key="3">3</div>
+                <div class="key" data-key="4">4</div>
+                <div class="key" data-key="5">5</div>
+                <div class="key" data-key="6">6</div>
+                <div class="key" data-key="7">7</div>
+                <div class="key" data-key="8">8</div>
+                <div class="key" data-key="9">9</div>
+                <div class="key" data-key="0">0</div>
+                <div class="key" data-key="-">-</div>
+                <div class="key" data-key="=">=</div>
+                <div class="key key-wide" data-key="Backspace">Back</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key key-wide" data-key="Tab">Tab</div>
+                <div class="key" data-key="q">q</div>
+                <div class="key" data-key="w">w</div>
+                <div class="key" data-key="e">e</div>
+                <div class="key" data-key="r">r</div>
+                <div class="key" data-key="t">t</div>
+                <div class="key" data-key="y">y</div>
+                <div class="key" data-key="u">u</div>
+                <div class="key" data-key="i">i</div>
+                <div class="key" data-key="o">o</div>
+                <div class="key" data-key="p">p</div>
+                <div class="key" data-key="[">[</div>
+                <div class="key" data-key="]">]</div>
+                <div class="key" data-key="\">\\</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key key-wider" data-key="Caps">Caps</div>
+                <div class="key" data-key="a">a</div>
+                <div class="key" data-key="s">s</div>
+                <div class="key" data-key="d">d</div>
+                <div class="key" data-key="f">f</div>
+                <div class="key" data-key="g">g</div>
+                <div class="key" data-key="h">h</div>
+                <div class="key" data-key="j">j</div>
+                <div class="key" data-key="k">k</div>
+                <div class="key" data-key="l">l</div>
+                <div class="key" data-key=";">;</div>
+                <div class="key" data-key="'">'</div>
+                <div class="key key-wider" data-key="Enter">Enter</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key key-wider" data-key="Shift">Shift</div>
+                <div class="key" data-key="z">z</div>
+                <div class="key" data-key="x">x</div>
+                <div class="key" data-key="c">c</div>
+                <div class="key" data-key="v">v</div>
+                <div class="key" data-key="b">b</div>
+                <div class="key" data-key="n">n</div>
+                <div class="key" data-key="m">m</div>
+                <div class="key" data-key=",">,</div>
+                <div class="key" data-key=".">.</div>
+                <div class="key" data-key="/">/</div>
+                <div class="key key-wider" data-key="Shift">Shift</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key key-wide" data-key="Control">Ctrl</div>
+                <div class="key key-wide" data-key="Alt">Alt</div>
+                <div class="key key-space" data-key=" ">Space</div>
+                <div class="key key-wide" data-key="Alt">Alt</div>
+                <div class="key key-wide" data-key="Control">Ctrl</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Credit -->
+    <div class="fixed bottom-3 right-5 text-[#585b70]/70 hover:text-[#585b70] text-[12px] font-bold z-50 transition-colors select-none tracking-widest pointer-events-none">Website by SHAAN</div>
+
+    <script>
+        const lessonsDataEn = [
+            { id: 1, title: "Lesson 1: Home Row Basics (F & J)", text: "f j f j ff jj fj jf fff jjj fjf jfj f j f j ff jj fff jjj" },
+            { id: 2, title: "Lesson 2: Home Row D & K", text: "d k d k dd kk dk kd ddd kkk dkf fkd kdf jdk d k d k dd kk" },
+            { id: 3, title: "Lesson 3: Home Row A, S, L, ;", text: "a s l ; as l; sa ;l asdf jkl; fdsa ;lkj a s d f j k l ; asdf" },
+            { id: 4, title: "Lesson 4: Full Home Row (+ G & H)", text: "g h gh hg fgh jhk ghg hgh asdfg hjkl; g h g h fghj kl; a g h" },
+            { id: 5, title: "Lesson 5: Top Row R, U, T, Y", text: "r u t y ru ty tr yt fr ju ft jy r u t y rrr uuu ttt yyy ru ty" },
+            { id: 6, title: "Lesson 6: Top Row E, I, W, O", text: "e i w o ei wo ie ow de ki sw lo e i w o e i w o eq iw wo e i" },
+            { id: 7, title: "Lesson 7: Full Top Row (+ Q & P)", text: "q p qp pq aq ;p qwe rty uio p q w e r t y u i o p qwerty uiop" },
+            { id: 8, title: "Lesson 8: Bottom Row V, M, B, N", text: "v m b n vm bn vb mn fv jm fb jn v m b n vv mm bb nn vm bn" },
+            { id: 9, title: "Lesson 9: Full Bottom Row (+ Z,X,C,.,/)", text: "z x c , . / zx c, ./ az sx dc fv gb hn jm k, l. ;/ z x c v b n" },
+            { id: 10, title: "Lesson 10: Left Shift (Capitalizing)", text: "A S D F G Q W E R T Z X C V B Asdfg Qwert Zxcvb Asdfg Qwert" },
+            { id: 11, title: "Lesson 11: Right Shift (Capitalizing)", text: "H J K L P O I U Y N M Hjkl Poiuy Nm Hjkl Poiuy Nm Hjkl" },
+            { id: 12, title: "Lesson 12: Mixed Cases Practice", text: "The Quick Brown Fox Jumps Over The Lazy Dog. Typing Is Fun." },
+            { id: 13, title: "Lesson 13: Numbers Left (1,2,3,4,5)", text: "1 2 3 4 5 12 34 51 25 345 123 543 21 1 2 3 4 5 135 24 531" },
+            { id: 14, title: "Lesson 14: Numbers Right (6,7,8,9,0)", text: "6 7 8 9 0 67 89 06 78 90 678 908 679 6 7 8 9 0 680 79 976" },
+            { id: 15, title: "Lesson 15: Alphanumeric Mix", text: "a1 b2 c3 d4 e5 f6 g7 h8 i9 j0 password123 user_99 2024!" },
+            { id: 16, title: "Lesson 16: Basic Symbols (!,@,#,$,%)", text: "! @ # $ % !@ #$ %! @# %$ !@# $%! ! @ # $ % !#% @$ $#!" },
+            { id: 17, title: "Lesson 17: Common Short Words", text: "the be of and a to in he have it that for they I with as not" },
+            { id: 18, title: "Lesson 18: Difficult Words", text: "rhythm queue fuchsia pharaoh mnemonic yacht zephyr zucchini" },
+            { id: 19, title: "Lesson 19: Punctuation Master", text: "word, word. word; word's \"word\" (word) word? word! word-word" },
+            { id: 20, title: "Lesson 20: Advanced Master Paragraph", text: "The quick brown fox jumps over the lazy dog. 1234567890!@#$%^&*" }
+        ];
+
+        const wordBankEn = ["the","be","of","and","a","to","in","he","have","it","that","for","they","I","with","as","not","on","she","at","by","this","we","you","do","but","from","or","which","one","would","all","will","there","say","who","make","when","can","more","if","no","man","out","other","so","what","time","up","go","about","than","into","could","state","only","new","year","some","take","come","these","know","see","use","get","like","then","first","any","work","now","may","such","give","over","think","most","even","find","day","also","after","way","many","must","look","before","great","back","through","long","where","much","should","well","people","down","own","just","because","good","each","those","feel","seem","how","high","too","place","little","world","very","still","nation","hand","old","life","tell","write","become","here","show","house","both","between","need","mean","call","develop","under","last","right","move","thing","general","school","never","same","another","begin","while","number","part","turn","real","leave","might","want","point","form","off","child","few","small","since","against","ask","late","home","interest","large","person","end","open","public","follow","during","present","without","again","hold","govern","around","possible","head","consider","word","program","problem","however","lead","system","set","order","eye","plan","run","keep","face","fact","group","play","stand","increase","early","course","change","help","line","computer","keyboard","software","monitor","internet","website","application","database","network","security"];
+
+        const examParagraphsEn = [
+            "SET 1: The Indian economy is characterized as a middle income developing market economy. It is the world's fifth-largest economy by nominal GDP and the third-largest by purchasing power parity (PPP). According to the International Monetary Fund (IMF), on a per capita income basis, India ranked 139th by GDP (nominal) and 127th by GDP (PPP) in 2023. From independence in 1947 until 1991, successive governments promoted protectionist economic policies, with extensive state intervention and economic regulation.",
+            "SET 2: The history of computers dates back to the invention of the abacus. Charles Babbage is considered the father of the computer. The first electronic digital computer, ENIAC, was completed in 1945. It weighed 30 tons, used 18,000 vacuum tubes, and consumed 150 kW of electricity. Modern smartphones have millions of times more processing power! The development of transistors in the late 1940s at Bell Labs replaced vacuum tubes and led to a new generation of computers.",
+            "SET 3: Climate change refers to long-term shifts in temperatures and weather patterns. These shifts may be natural, such as through variations in the solar cycle. But since the 1800s, human activities have been the main driver of climate change, primarily due to burning fossil fuels like coal, oil, and gas, which produce heat-trapping gases. The current rise in global average temperature is more rapid than previous changes, and is primarily caused by humans burning fossil fuels.",
+            "SET 4: Artificial intelligence (AI) is the simulation of human intelligence processes by machines, especially computer systems. Specific applications of AI include expert systems, natural language processing, speech recognition and machine vision. As of 2024, AI is rapidly transforming industries, boosting productivity by 40% in various IT sectors. Programming AI involves focusing on three cognitive skills: learning, reasoning and self-correction.",
+            "SET 5: The solar system consists of the Sun and the objects that orbit it, whether they orbit it directly or by orbiting other objects that orbit it directly. Of those objects that orbit the Sun directly, the largest are the eight planets, with the remainder being smaller objects, the dwarf planets and small Solar System bodies. The Sun is a G-type main-sequence star that comprises 99.86% of the mass of the Solar System."
+        ];
+
+        const lessonsDataHi = [
+            { id: 1, title: "पाठ 1: Home Row मात्राएँ", text: "रो रो को को पो पो गो गो जो जो बो बो लो लो सो सो खो खो ठो ठो ढो ढो मो मो" },
+            { id: 2, title: "पाठ 2: Home Row अक्षर", text: "पर कर तक चल पल बल कल मल नल फल रथ पथ छत मत सत खत शत ढ़त षण" },
+            { id: 3, title: "पाठ 3: Home Row Mix", text: "कम पर तक चल कल पल मत बल नल फल रथ पथ छत सत खत शत ढ़त षण मन" },
+            { id: 4, title: "पाठ 4: Top Row मात्राएँ", text: "और ओर और और ओर ओर और और और ओर और और और ओर और और और ओर" },
+            { id: 5, title: "पाठ 5: Top Row अक्षर", text: "गर घर चर थर धर पर कर तक चल पल बल कल मल नल फल रथ पथ छत सत" },
+            { id: 6, title: "पाठ 6: Bottom Row 1", text: "मन वन जन धन बन सन रन तन पन कन उन एन ओ ओ औ औ अं अं अः अः" },
+            { id: 7, title: "पाठ 7: Shift Home Row", text: "राम काम नाम दाम धाम आम श्याम राम काम नाम दाम धाम आम श्याम" },
+            { id: 8, title: "पाठ 8: Shift Top Row", text: "भारत देश महान हमारा प्यारा जग से न्यारा भारत देश महान हमारा" },
+            { id: 9, title: "पाठ 9: Common Words", text: "और लिए है की में से को का कि एक पर क्या यह नहीं हैं तो ही" },
+            { id: 10, title: "पाठ 10: Sentences", text: "समय बहुत मूल्यवान है। हमें अपना काम समय पर करना चाहिए।" },
+            { id: 11, title: "पाठ 11: Numbers (संख्या)", text: "१ २ ३ ४ ५ ६ ७ ८ ९ ० १२ ३४ ५६ ७८ ९० १२० २५० ५०० १०००" },
+            { id: 12, title: "पाठ 12: कठिन शब्द", text: "विज्ञान विद्यालय राष्ट्रिय संस्कृति प्रकृति स्वतंत्रता प्रजातंत्र" },
+            { id: 13, title: "पाठ 13: आधे अक्षर", text: "अच्छा बच्चा सच्चा पक्का प्याज न्याय सत्य तथ्य अभ्यास स्वास्थ्य" },
+            { id: 14, title: "पाठ 14: अनुस्वार/चंद्रबिंदु", text: "हंस चाँद आँख गाँव कहाँ यहाँ वहाँ मंगल दंगल जंगल पतंग" },
+            { id: 15, title: "पाठ 15: 'र' के विभिन्न रूप", text: "क्रम भ्रम ग्रह कृपा कृष्ण धर्म कर्म मर्म सूर्य कार्य राष्ट्र" },
+            { id: 16, title: "पाठ 16: विराम चिह्न", text: "राम, श्याम। क्या? 'कहा' (ब्रैकेट) - डैश : कोलन ! @ #" },
+            { id: 17, title: "पाठ 17: मिक्स मात्राएँ 1", text: "औरतें औज़ार ऐनक ऐश्वर्य औषध औलाद ऊन ऊर्जा ईख ईश्वर" },
+            { id: 18, title: "पाठ 18: मिक्स मात्राएँ 2", text: "प्रकृति संस्कृति विकृति आकृति जागृति स्मृति विस्तृत निवृत्ति" },
+            { id: 19, title: "पाठ 19: विशेष वर्ण", text: "ऋ ढ ठ छ फ श ष ञ ण ङ भ ध झ रू हृदय ॠ ऌ ॲ" },
+            { id: 20, title: "पाठ 20: मास्टर हिंदी टेस्ट", text: "भारत एक महान देश है, जिसकी संस्कृति और सभ्यता हज़ारों वर्ष पुरानी है।" }
+        ];
+
+        const wordBankHi = ["में","और","से","को","का","की","है","कि","एक","पर","क्या","लिए","यह","नहीं","हैं","तो","ही","साथ","था","जो","भी","अपने","या","तक","जब","बाद","वाले","कुछ","लेकिन","बारे","कहा","कर","सकते","गया","कोई","समय","भारत","सरकार","देश","हिंदी","काम","लोग","दिन","तरह","विकास","आज","भारतीय","समाज","बात","राज्य","रूप","बहुत","वर्ष","जीवन","अधिक","ऐसे","नाम","सबसे","शिक्षा","क्षेत्र","उपयोग","अधिकार","निर्माण","भाषा","व्यक्ति","अनुसार","कारण","प्राप्त","होता","होने","करने","किया","गई","थे","थी","हुए","होती","जाता","वाले","करना","कई","पहले","जाती","आदि","कहते","होते","जा","रहा","रही","रहे","चाहिए","दिया","लिया","गए","गयी"];
+
+        const examParagraphsHi = [
+            "सेट १: भारत एक विकासशील देश है और दुनिया की सबसे तेजी से बढ़ती प्रमुख अर्थव्यवस्थाओं में से एक है। क्रय शक्ति समता (पीपीपी) के आधार पर यह दुनिया की तीसरी सबसे बड़ी अर्थव्यवस्था है। 1991 के आर्थिक उदारीकरण के बाद से, भारत ने महत्वपूर्ण आर्थिक प्रगति की है। कृषि, उद्योग और सेवाएं भारतीय अर्थव्यवस्था के तीन मुख्य क्षेत्र हैं।",
+            "सेट २: कंप्यूटर का इतिहास बहुत पुराना है। चार्ल्स बैबेज को कंप्यूटर का पिता माना जाता है। पहला इलेक्ट्रॉनिक डिजिटल कंप्यूटर, ENIAC, 1945 में पूरा हुआ था। इसका वजन 30 टन था और इसमें 18,000 वैक्यूम ट्यूब का इस्तेमाल किया गया था। आज के आधुनिक स्मार्टफोन में इसकी तुलना में लाखों गुना अधिक प्रोसेसिंग पावर है!",
+            "सेट ३: जलवायु परिवर्तन का तात्पर्य तापमान और मौसम के मिजाज में दीर्घकालिक बदलावों से है। ये बदलाव प्राकृतिक हो सकते हैं, जैसे सौर चक्र में बदलाव के माध्यम से। लेकिन 1800 के दशक के बाद से, मानव गतिविधियाँ जलवायु परिवर्तन का मुख्य कारण रही हैं, जिसका मुख्य कारण कोयला और तेल जैसे जीवाश्म ईंधन जलाना है।",
+            "सेट ४: कृत्रिम बुद्धिमत्ता (एआई) मशीनों, विशेष रूप से कंप्यूटर सिस्टम द्वारा मानव बुद्धि प्रक्रियाओं का अनुकरण है। एआई के विशिष्ट अनुप्रयोगों में विशेषज्ञ प्रणाली, प्राकृतिक भाषा प्रसंस्करण और मशीन विजन शामिल हैं। 2024 तक, एआई तेजी से उद्योगों को बदल रहा है और उत्पादकता को बढ़ा रहा है।",
+            "सेट ५: सौर मंडल में सूर्य और वह खगोलीय पिंड सम्मलित हैं जो इस मंडल में एक दूसरे से गुरुत्वाकर्षण बल द्वारा बंधे हैं। इनमें आठ ग्रह, उनके 166 ज्ञात उपग्रह, पाँच बौने ग्रह और अरबों छोटे पिंड शामिल हैं। सूर्य हमारे सौर मंडल का केंद्र है और पृथ्वी से लगभग 150 मिलियन किलोमीटर दूर स्थित है।"
+        ];
+
+        const hindiInscriptMap = {
+            'q':'ौ', 'w':'ै', 'e':'ा', 'r':'ी', 't':'ू', 'y':'ब', 'u':'ह', 'i':'ग', 'o':'द', 'p':'ज', '[':'ड', ']':'़',
+            'Q':'औ', 'W':'ऐ', 'E':'आ', 'R':'ई', 'T':'ऊ', 'Y':'भ', 'U':'ङ', 'I':'घ', 'O':'ध', 'P':'झ', '{':'ढ', '}':'ञ',
+            'a':'ो', 's':'े', 'd':'्', 'f':'ि', 'g':'ु', 'h':'प', 'j':'र', 'k':'क', 'l':'त', ';':'च', '\'':'ट',
+            'A':'ओ', 'S':'ए', 'D':'अ', 'F':'इ', 'G':'उ', 'H':'फ', 'J':'ऱ', 'K':'ख', 'L':'थ', ':':'छ', '"':'ठ',
+            'z':'े', 'x':'ं', 'c':'म', 'v':'न', 'b':'व', 'n':'ल', 'm':'स', ',':',', '.':'.', '/':'य',
+            'Z':'े', 'X':'ँ', 'C':'ण', 'V':'न', 'B':'व', 'N':'ळ', 'M':'श', '<':'ष', '>':'।', '?':'?'
+        };
+
+        let currentLang = 'en'; 
+        let currentMode = 'time'; 
+        let testDuration = 60; 
+        let currentUniversalTime = 60; 
+        let testWordCount = 50;
+        let selectedLesson = 1; 
+        let selectedExam = 0; 
+        let showKeyboard = false; 
+        let isFocused = true;
+        let timerMode = 'countdown'; 
+
+        let allWordsArr = [];
+        let currentText = "";
+        let typedChars = [];
+        let timer = 0;
+        let interval = null;
+        let isTyping = false;
+        
+        let totalStrokes = 0;
+        let correctStrokes = 0;
+        let errorStrokes = 0; 
+        
+        let baseOffset = -1;
+        let lineHeight = window.innerWidth <= 768 ? 40 : 52; 
+        let renderedWordCount = 0;
+        const CHUNK_SIZE = 150; 
+
+        const uiText = document.getElementById('text-display');
+        const uiTime = document.getElementById('stat-time');
+        const uiWpm = document.getElementById('stat-wpm');
+        const uiAcc = document.getElementById('stat-acc');
+        const uiProgress = document.getElementById('progress-bar');
+        const uiKbWrapper = document.getElementById('kb-wrapper');
+        const typingWrapper = document.getElementById('typing-wrapper');
+        const subOptionsContainer = document.getElementById('sub-options-container');
+
+        window.addEventListener('resize', () => { lineHeight = window.innerWidth <= 768 ? 40 : 52; updateCSSCaret(); });
+
+        function initApp() {
+            setMode('time'); 
+            window.addEventListener('focus', () => setFocus(true));
+            window.addEventListener('blur', () => setFocus(false));
+            document.addEventListener('click', (e) => {
+                if(!typingWrapper.contains(e.target) && !e.target.closest('header') && !e.target.closest('.keyboard-wrapper')) {
+                    setFocus(false);
+                } else if (typingWrapper.contains(e.target)) {
+                    setFocus(true);
+                }
+            });
+
+            document.addEventListener('keydown', handleGlobalKeydown);
+            document.addEventListener('keyup', handleGlobalKeyup);
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'hi' : 'en';
+            const langBtn = document.getElementById('lang-btn');
+            
+            if(currentLang === 'hi') {
+                langBtn.innerHTML = '<i class="fa-solid fa-language"></i> हिंदी / Eng';
+                langBtn.classList.replace('text-primary', 'text-[#a6e3a1]');
+                langBtn.classList.replace('border-primary/40', 'border-[#a6e3a1]/40');
+            } else {
+                langBtn.innerHTML = '<i class="fa-solid fa-language"></i> Eng / हिंदी';
+                langBtn.classList.replace('text-[#a6e3a1]', 'text-primary');
+                langBtn.classList.replace('border-[#a6e3a1]/40', 'border-primary/40');
+            }
+            updateKeyboardLabels();
+            setMode(currentMode); 
+        }
+
+        function updateKeyboardLabels() {
+            const keys = document.querySelectorAll('.key');
+            keys.forEach(k => {
+                let keyAttr = k.getAttribute('data-key');
+                if (keyAttr && keyAttr.length === 1) { 
+                    if (currentLang === 'hi' && hindiInscriptMap[keyAttr.toLowerCase()]) {
+                        k.innerText = hindiInscriptMap[keyAttr.toLowerCase()];
+                    } else {
+                        k.innerText = keyAttr;
+                    }
+                }
+            });
+        }
+
+        function toggleKeyboard() {
+            showKeyboard = !showKeyboard;
+            const kbBtn = document.getElementById('kb-btn');
+            if(showKeyboard) {
+                uiKbWrapper.classList.add('show-kb');
+                kbBtn.classList.add('bg-primary', 'text-bgDark');
+                kbBtn.classList.remove('text-textDim', 'bg-bgDark');
+            } else {
+                uiKbWrapper.classList.remove('show-kb');
+                kbBtn.classList.remove('bg-primary', 'text-bgDark');
+                kbBtn.classList.add('text-textDim', 'bg-bgDark');
+            }
+        }
+
+        function setFocus(focused) {
+            isFocused = focused;
+            if(focused) {
+                typingWrapper.classList.add('is-focused');
+                typingWrapper.classList.add('border-primary/50');
+                typingWrapper.classList.remove('border-[#313244]');
+            } else {
+                typingWrapper.classList.remove('is-focused');
+                typingWrapper.classList.remove('border-primary/50');
+                typingWrapper.classList.add('border-[#313244]');
+            }
+        }
+        function focusApp() { setFocus(true); }
+
+        function setUniversalTime(seconds) {
+            currentUniversalTime = seconds;
+            testDuration = seconds;
+            updateTimerButtons();
+            prepareTest();
+        }
+
+        function updateTimerButtons() {
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                const btnTime = parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);
+                if (btnTime === currentUniversalTime && timerMode === 'countdown' && currentMode !== 'exam' && currentMode !== 'words') {
+                    btn.classList.add('bg-primary', 'text-bgDark', 'shadow-md');
+                    btn.classList.remove('text-textDim', 'hover:text-textBright');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-bgDark', 'shadow-md');
+                    btn.classList.add('text-textDim', 'hover:text-textBright');
+                }
+            });
+            
+            const timerContainer = document.getElementById('universal-timer-container');
+            if (currentMode === 'exam' || currentMode === 'words') {
+                timerContainer.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                timerContainer.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function createWordButtons(counts) {
+            const div = document.createElement('div');
+            div.className = "flex gap-2 items-center bg-bgPanel px-2 py-1 rounded-lg border border-[#313244]";
+            
+            counts.forEach((c) => {
+                const btn = document.createElement('button');
+                btn.innerText = `${c} words`;
+                btn.className = `px-3 py-1 rounded-md text-sm font-bold whitespace-nowrap transition-all ${testWordCount === c ? 'bg-primary text-bgDark shadow-md' : 'text-textDim hover:text-textBright hover:bg-white/5'}`;
+                btn.onclick = (e) => { testWordCount = c; setMode('words'); };
+                div.appendChild(btn);
+            });
+            return div;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            ['lessons', 'time', 'words', 'exam'].forEach(m => {
+                const btn = document.getElementById(`mode-${m}`);
+                if(m === 'exam') {
+                     btn.className = `px-4 py-2 rounded-md font-semibold text-sm transition-all whitespace-nowrap flex-shrink-0 ${mode === m ? 'bg-[#f38ba8] text-bgDark shadow-md' : 'text-[#f38ba8] hover:bg-[#f38ba820]'}`;
+                } else {
+                    btn.className = `px-4 py-2 rounded-md font-semibold text-sm transition-all whitespace-nowrap flex-shrink-0 ${mode === m ? 'bg-primary text-bgDark shadow-md' : 'text-textDim hover:text-textBright hover:bg-white/5'}`;
+                }
+            });
+
+            subOptionsContainer.innerHTML = '';
+            
+            if (mode === 'lessons') {
+                timerMode = 'countdown'; 
+                testDuration = currentUniversalTime;
+                
+                const selectDiv = document.createElement('div');
+                selectDiv.className = "flex gap-2 items-center";
+                const select = document.createElement('select');
+                select.className = "bg-bgDark border border-[#313244] font-bold text-primary text-sm rounded-lg block p-2 outline-none w-64 hover:border-primary/50 transition-colors";
+                
+                const activeLessonsData = currentLang === 'en' ? lessonsDataEn : lessonsDataHi;
+                activeLessonsData.forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l.id; opt.text = l.title;
+                    select.appendChild(opt);
+                });
+                select.value = selectedLesson;
+                select.onchange = (e) => { selectedLesson = parseInt(e.target.value); prepareTest(); };
+                
+                selectDiv.appendChild(select);
+                subOptionsContainer.appendChild(selectDiv);
+                document.getElementById('btn-next').classList.remove('hidden');
+                
+            } else if (mode === 'time') {
+                timerMode = 'countdown';
+                testDuration = currentUniversalTime;
+                document.getElementById('btn-next').classList.add('hidden');
+                
+            } else if (mode === 'words') {
+                timerMode = 'countup'; 
+                const counts = [10, 50, 100, 250, 500, 1000, 5000, 10000];
+                subOptionsContainer.appendChild(createWordButtons(counts));
+                document.getElementById('btn-next').classList.add('hidden');
+                
+            } else if (mode === 'exam') {
+                timerMode = 'countdown';
+                testDuration = 900; 
+                
+                const div = document.createElement('div');
+                div.className = "flex gap-2 items-center bg-bgPanel px-2 py-1 rounded-lg border border-[#313244]";
+                
+                const activeExamSets = currentLang === 'en' ? examParagraphsEn : examParagraphsHi;
+                activeExamSets.forEach((_, index) => {
+                    const btn = document.createElement('button');
+                    btn.innerText = `Set ${index + 1}`;
+                    btn.className = `px-3 py-1 rounded-md text-sm font-bold whitespace-nowrap transition-all ${selectedExam === index ? 'bg-[#f38ba8] text-bgDark shadow-md' : 'text-[#f38ba8] hover:bg-[#f38ba820]'}`;
+                    btn.onclick = () => { selectedExam = index; prepareTest(); };
+                    div.appendChild(btn);
+                });
+                
+                const timeTag = document.createElement('span');
+                timeTag.className = "text-[#f38ba8] font-bold text-sm bg-[#f38ba820] px-3 py-1 rounded-md whitespace-nowrap border border-[#f38ba8]/40 ml-2";
+                timeTag.innerHTML = `<i class="fa-solid fa-clock mr-1"></i> 15 Min`;
+
+                div.appendChild(timeTag);
+                subOptionsContainer.appendChild(div);
+                document.getElementById('btn-next').classList.add('hidden');
+            }
+            
+            updateTimerButtons();
+            prepareTest();
+        }
+
+        function prepareTest() {
+            document.getElementById('result-overlay').classList.add('hidden');
+            resetEngine();
+            
+            const activeWords = currentLang === 'en' ? wordBankEn : wordBankHi;
+            let textArr = [];
+
+            if (currentMode === 'lessons') {
+                const activeLessons = currentLang === 'en' ? lessonsDataEn : lessonsDataHi;
+                const lesson = activeLessons.find(l => l.id === selectedLesson) || activeLessons[0];
+                let lessonText = "";
+                for(let i=0; i<1000; i++) { lessonText += lesson.text + " "; }
+                textArr = lessonText.trim().split(' ');
+            } else if (currentMode === 'exam') {
+                const activeExam = currentLang === 'en' ? examParagraphsEn : examParagraphsHi;
+                let examText = "";
+                for(let i=0; i<50; i++) { examText += activeExam[selectedExam] + " "; }
+                textArr = examText.trim().split(' ');
+            } else if (currentMode === 'words') {
+                for(let i=0; i<testWordCount; i++) {
+                    textArr.push(activeWords[Math.floor(Math.random() * activeWords.length)]);
+                }
+            } else { 
+                for(let i=0; i<5000; i++) { 
+                    textArr.push(activeWords[Math.floor(Math.random() * activeWords.length)]);
+                }
+            }
+
+            allWordsArr = textArr;
+            currentText = allWordsArr.join(' ');
+            
+            uiTime.innerText = timerMode === 'countdown' ? formatTime(testDuration) : "00:00";
+            uiText.style.fontFamily = currentLang === 'hi' ? "'Noto Sans Devanagari', sans-serif" : "'JetBrains Mono', monospace";
+
+            renderTextDOM(true);
+            updateCSSCaret();
+            setFocus(true);
+        }
+
+        function renderTextDOM(reset = true) {
+            if (reset) {
+                uiText.innerHTML = '';
+                renderedWordCount = 0;
+                uiText.style.transform = `translateY(0px)`;
+                baseOffset = -1;
+                typedChars = [];
+            }
+            
+            let htmlStr = '';
+            const endIdx = Math.min(renderedWordCount + CHUNK_SIZE, allWordsArr.length);
+            
+            for(let wIdx = renderedWordCount; wIdx < endIdx; wIdx++) {
+                htmlStr += `<div class="word" data-idx="${wIdx}">`;
+                const word = allWordsArr[wIdx];
+                for(let cIdx = 0; cIdx < word.length; cIdx++) {
+                    htmlStr += `<span class="char">${word[cIdx]}</span>`;
+                }
+                if (wIdx < allWordsArr.length - 1) {
+                    htmlStr += `<span class="char space"> </span>`;
+                }
+                htmlStr += `</div>`;
+            }
+            
+            uiText.insertAdjacentHTML('beforeend', htmlStr);
+            renderedWordCount = endIdx;
+        }
+
+        function handleGlobalKeydown(e) {
+            if(!isFocused || !document.getElementById('result-overlay').classList.contains('hidden')) return;
+            
+            const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'];
+            if (e.key === 'Tab' || (e.key === 'Enter' && e.shiftKey === false)) e.preventDefault();
+            if (e.key === 'Escape') { endTest(true); return; }
+
+            highlightKey(e.key, false);
+            if (ignoredKeys.includes(e.key)) return;
+            if (e.key === ' ' || e.key === 'Backspace') e.preventDefault();
+
+            if (!isTyping) startTimer();
+
+            const expectedChar = currentText[typedChars.length];
+
+            if (e.key === 'Backspace') {
+                if (typedChars.length > 0) {
+                    typedChars.pop();
+                    updateCharacterClasses();
+                }
+            } else {
+                if (typedChars.length >= currentText.length) return; 
+                
+                let inputChar = e.key;
+                if (currentLang === 'hi' && hindiInscriptMap[e.key]) {
+                    inputChar = hindiInscriptMap[e.key];
+                }
+                
+                totalStrokes++;
+                typedChars.push(inputChar);
+                
+                if(inputChar === expectedChar) { correctStrokes++; } 
+                else { errorStrokes++; highlightKey(e.key, true); }
+                
+                updateCharacterClasses();
+            }
+            
+            let currentWordCount = (currentText.substring(0, typedChars.length).match(/ /g) || []).length;
+            if (currentWordCount > renderedWordCount - 25 && renderedWordCount < allWordsArr.length) {
+                renderTextDOM(false);
+            }
+            
+            updateCSSCaret();
+            updateStatsLive();
+            
+            if (timerMode === 'countup' && typedChars.length >= currentText.length) {
+                endTest();
+            }
+        }
+
+        function handleGlobalKeyup(e) { removeHighlightKey(e.key); }
+
+        function updateCharacterClasses() {
+            const allSpans = uiText.getElementsByClassName('char'); 
+            const startIdx = Math.max(0, typedChars.length - 3);
+            const endIdx = Math.min(allSpans.length, typedChars.length + 2);
+            
+            for (let i = startIdx; i < endIdx; i++) {
+                const span = allSpans[i];
+                if (!span) continue;
+                
+                span.classList.remove('correct', 'incorrect');
+                if (i < typedChars.length) {
+                    if (typedChars[i] === currentText[i]) span.classList.add('correct');
+                    else span.classList.add('incorrect');
+                }
+            }
+            
+            if (typedChars.length > 0 && currentText[typedChars.length - 1] === ' ') {
+                let currentWordIdx = (currentText.substring(0, typedChars.length).match(/ /g) || []).length - 1;
+                const words = uiText.getElementsByClassName('word');
+                if(words[currentWordIdx]) {
+                    let hasError = words[currentWordIdx].querySelectorAll('.incorrect').length > 0;
+                    if(hasError) words[currentWordIdx].classList.add('error-word');
+                    else words[currentWordIdx].classList.remove('error-word');
+                }
+            }
+        }
+
+        function updateCSSCaret() {
+            const allSpans = uiText.getElementsByClassName('char');
+            const activeEls = uiText.getElementsByClassName('active-caret');
+            while(activeEls.length > 0) activeEls[0].classList.remove('active-caret');
+
+            let targetIndex = typedChars.length;
+            if (targetIndex >= allSpans.length) targetIndex = allSpans.length - 1; 
+            
+            const targetSpan = allSpans[targetIndex];
+            if (targetSpan) {
+                targetSpan.classList.add('active-caret');
+                
+                const activeWord = targetSpan.parentElement;
+                if (activeWord) {
+                    if (baseOffset === -1) baseOffset = activeWord.offsetTop; 
+
+                    let currentOffset = activeWord.offsetTop;
+                    let lineIndex = Math.round((currentOffset - baseOffset) / lineHeight);
+                    
+                    if (lineIndex >= 2) {
+                        uiText.style.transform = `translateY(-${(lineIndex - 1) * lineHeight}px)`;
+                    } else {
+                        uiText.style.transform = `translateY(0px)`;
+                    }
+                }
+            }
+        }
+
+        function startTimer() {
+            isTyping = true;
+            timer = 0;
+            
+            interval = setInterval(() => {
+                timer++;
+                
+                if (timerMode === 'countdown') {
+                    const timeRemaining = testDuration - timer;
+                    uiTime.innerText = formatTime(timeRemaining);
+                    uiProgress.style.width = `${(timer / testDuration) * 100}%`;
+                    if (timeRemaining <= 0) endTest();
+                } else {
+                    uiTime.innerText = formatTime(timer);
+                    uiProgress.style.width = `${(typedChars.length / currentText.length) * 100}%`;
+                }
+                
+                updateStatsLive();
+            }, 1000);
+        }
+
+        function updateStatsLive() {
+            if(timer === 0) return;
+            const timeInMinutes = timer / 60;
+            
+            const grossWpm = Math.round((typedChars.length / 5) / timeInMinutes);
+            const netWpm = Math.round((correctStrokes / 5) / timeInMinutes);
+            
+            uiWpm.innerText = netWpm > 0 ? netWpm : 0;
+            const uiGross = document.getElementById('stat-gross-wpm');
+            if(uiGross) uiGross.innerText = grossWpm > 0 ? grossWpm : 0;
+
+            const accuracy = totalStrokes === 0 ? 100 : Math.round(((totalStrokes - errorStrokes) / totalStrokes) * 100);
+            uiAcc.innerText = `${Math.max(0, accuracy)}%`;
+        }
+
+        function endTest(aborted = false) {
+            clearInterval(interval);
+            isTyping = false;
+            setFocus(false);
+            
+            if(aborted) { prepareTest(); return; }
+
+            const timeInMinutes = timerMode === 'countdown' ? (testDuration / 60) : (timer / 60); 
+
+            const grossWpm = Math.round((typedChars.length / 5) / timeInMinutes);
+            const netWpm = Math.round((correctStrokes / 5) / timeInMinutes);
+            const finalAcc = totalStrokes === 0 ? 0 : Math.round(((totalStrokes - errorStrokes) / totalStrokes) * 100);
+            
+            document.getElementById('result-wpm').innerHTML = `${netWpm > 0 ? netWpm : 0} <span class="text-xl text-textDim">WPM</span>`;
+            document.getElementById('result-gross').innerHTML = `${grossWpm > 0 ? grossWpm : 0} <span class="text-xl text-textDim">WPM</span>`;
+            document.getElementById('result-acc').innerText = `${Math.max(0, finalAcc)}%`;
+            document.getElementById('result-correct-keys').innerText = correctStrokes;
+            document.getElementById('result-error-keys').innerText = errorStrokes;
+
+            document.getElementById('result-overlay').classList.remove('hidden');
+        }
+
+        function resetEngine() {
+            clearInterval(interval);
+            isTyping = false;
+            timer = 0;
+            typedChars = [];
+            totalStrokes = 0;
+            correctStrokes = 0;
+            errorStrokes = 0;
+            baseOffset = -1;
+            
+            uiWpm.innerText = "0";
+            const uiGross = document.getElementById('stat-gross-wpm');
+            if(uiGross) uiGross.innerText = "0";
+            uiAcc.innerText = "100%";
+            uiProgress.style.width = "0%";
+            
+            document.querySelectorAll('.key').forEach(k => k.classList.remove('active', 'error'));
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function restartCurrent() { prepareTest(); }
+
+        function loadNextOption() {
+            if (currentMode === 'lessons') {
+                const select = subOptionsContainer.querySelector('select');
+                const activeLessons = currentLang === 'en' ? lessonsDataEn : lessonsDataHi;
+                if (selectedLesson < activeLessons.length) {
+                    selectedLesson++;
+                    select.value = selectedLesson;
+                    prepareTest();
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && !document.getElementById('result-overlay').classList.contains('hidden')) restartCurrent();
+        });
+
+        function highlightKey(key, isError) {
+            if(!showKeyboard) return;
+            let keyStr = key.toLowerCase();
+            const keyMap = { 'backspace':'Backspace', 'tab':'Tab', 'capslock':'Caps', 'enter':'Enter', 'shift':'Shift', 'control':'Control', 'alt':'Alt', ' ':' ' };
+            const searchKey = keyMap[keyStr] || keyStr;
+            
+            document.querySelectorAll('.key').forEach(k => {
+                if (k.getAttribute('data-key').toLowerCase() === searchKey.toLowerCase()) {
+                    k.classList.add('active');
+                    if (isError) k.classList.add('error');
+                }
+            });
+        }
+
+        function removeHighlightKey(key) {
+            if(!showKeyboard) return;
+            let keyStr = key.toLowerCase();
+            const keyMap = { 'backspace':'Backspace', 'tab':'Tab', 'capslock':'Caps', 'enter':'Enter', 'shift':'Shift', 'control':'Control', 'alt':'Alt', ' ':' ' };
+            const searchKey = keyMap[keyStr] || keyStr;
+            
+            document.querySelectorAll('.key').forEach(k => {
+                if (k.getAttribute('data-key').toLowerCase() === searchKey.toLowerCase()) {
+                    k.classList.remove('active', 'error');
+                }
+            });
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
